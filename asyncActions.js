@@ -56,4 +56,21 @@ const reducer = (state = initialState, action) => {
   }
 }
 
+// Action Creator
+const fetchUsers = () => {
+  return function (dispatch) {
+    dispatch(fetchUsersRequest())
+    axios.get('https://jsonplaceholder.typicode.com/users')
+      .then(response => {
+        // response.data is the array of users
+        const users = response.data.map((user) => user.id)
+        dispatch(fetchUsersSuccess(users))
+      })
+      .catch(error => {
+        // error.message is the error description
+        dispatch(fetchUsersFailure(error.message))
+      })
+  }
+}
+
 const store = createStore(reducer, applyMiddleware(thunkMiddleware))
